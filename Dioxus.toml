@@ -1,0 +1,45 @@
+[application]
+
+# App (Project) Name
+name = "glsweb"
+
+# Dioxus App Default Platform
+# web, desktop, fullstack
+default_platform = "fullstack"
+
+# `build` & `serve` dist path
+out_dir = "dist"
+
+# resource (assets) file folder
+asset_dir = "assets"
+
+[web.app]
+
+# HTML title tag content
+title = "GLS data portal"
+
+[web.watcher]
+
+# when watcher trigger, regenerate the `index.html`
+reload_html = true
+
+# which files or dirs will be watcher monitoring
+watch_path = ["src", "assets", "../drsx/src"]
+
+# include `assets` in web platform
+[web.resource]
+
+# CSS style file
+
+style = ["/tailwind.css"]
+
+# Javascript code file
+script = [
+  "https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js", "https://cdn.jsdelivr.net/npm/echarts-gl@2.0.9/dist/echarts-gl.min.js"
+]
+
+[web.resource.dev]
+
+# Javascript code file
+# serve: [dev-server] only
+script = []
