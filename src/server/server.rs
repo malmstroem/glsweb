@@ -27,7 +27,6 @@ pub fn server_start(app_fn: fn() -> Element) {
             debug!("Connected to the database.");
             debug!("pg_pool={:?}", &pg_pool);
 
-            // This defaults as normal cookies.
             let session_config = SessionConfig::default().with_table_name("users_sessions");
             let auth_config = AuthConfig::<i64>::default().with_anonymous_user_id(Some(1));
             let session_store =
@@ -37,9 +36,7 @@ pub fn server_start(app_fn: fn() -> Element) {
 
             let state = ServerState(Arc::new(pg_pool.clone()));
 
-            // Build our application web api router.
             let web_api_router = Router::new()
-                // Server side render the application, serve static assets, and register server functions.
                 .serve_dioxus_application(ServeConfig::builder().build(), move || {
                     VirtualDom::new(app_fn)
                 })
@@ -53,7 +50,6 @@ pub fn server_start(app_fn: fn() -> Element) {
                 .layer(axum_session::SessionLayer::new(session_store))
                 .layer(Extension(state));
 
-            // Start it.
             let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 3000));
             let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
 

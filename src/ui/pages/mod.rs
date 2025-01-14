@@ -1,7 +1,9 @@
+mod about;
 mod home;
 mod login;
 mod logout;
 mod protein;
+pub use about::*;
 pub use home::*;
 pub use login::*;
 pub use logout::*;

@@ -20,10 +20,9 @@ pub fn Login() -> Element {
                     *USR.write() = username.clone();
                     let nav = navigator();
                     nav.replace(Route::Home {});
-                    ()
                 }
-                "user not found" => *status.write() = format!("{data}"),
-                "incorrect password" => *status.write() = format!("{data}"),
+                "user not found" => *status.write() = data.to_string(),
+                "incorrect password" => *status.write() = data.to_string(),
                 _ => *status.write() = format!("unknown response: {data}"),
             },
             Err(err) => {

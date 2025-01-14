@@ -23,45 +23,25 @@ pub struct ProteinRowProps {
 #[component]
 pub fn ProteinRow(props: ProteinRowProps) -> Element {
     rsx! {
-        div { class: "flex min-w-0 gap-x-4 my-2", id: "pri:{props.protein.id}", key: "prk:{props.protein.id}",
+        div { key: "prk:{props.protein.id}", class: "flex min-w-0 gap-x-4 my-2", id: "pri:{props.protein.id}",
             div { class: "min-w-0 flex-auto",
                 p { class: "text-black text-lg font-bold", "{props.protein.entry}" }
                 p { class: "text-black text-sm", "{props.protein.entry_name} / {props.protein.frm}" }
             }
             div { class: "hidden shrink-0 sm:flex sm:flex-col sm:items-end overflow-x-clip",
                 p { class: "text-black text-sm", "{props.protein.id}" }
-                Link {
+                Link {key: "protein{props.protein.id}",
                     class: "inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 my-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
                     id: "proteinid{props.protein.id}",
-                    key: "protein{props.protein.id}",
-                    to: Route::ProteinDetails { id: props.protein.id},
+                    to: Route::ProteinDetails {
+                        id: props.protein.id,
+                    },
 
                     "View details (id: {props.protein.id})"
                 }
-
             }
         }
     }
-}
-
-#[derive(Props, Clone, PartialEq)]
-pub struct ProteinDetailProps {
-    pub id: i32,
-}
-
-#[component]
-pub fn ProteinDetails(props: ProteinDetailProps) -> Element {
-    let content = rsx! {
-        div { class:"divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow",
-           div { class:"px-4 py-5 sm:px-6",
-               "Protein Details for {props.id}"
-           }
-           div { class:"px-8 py-8 sm:p-6 m-4",
-               "Details goes here"
-           }
-        }
-    };
-    rsx! { Layout { content }}
 }
 
 #[component]
@@ -88,7 +68,7 @@ pub fn ListProteins() -> Element {
         }
     };
     let content = rsx! {
-        {c2}
+        {c2},
         {c1}
     };
     rsx! {

@@ -86,7 +86,6 @@ impl User {
             .await
             .ok()?;
 
-        //lets just get all the tokens the user can use, we will only use the full permissions if modifing them.
         let sql_user_perms = sqlx::query_as::<_, SqlPermissionTokens>(
             "SELECT token FROM users_permissions WHERE user_id = $1;",
         )
@@ -183,7 +182,6 @@ where
         parts: &mut http::request::Parts,
         state: &S,
     ) -> Result<Self, Self::Rejection> {
-        //
         AuthSession::<User, i64, SessionPgPool, PgPool>::from_request_parts(parts, state)
             .await
             .map(|auth_session| {

@@ -1,4 +1,4 @@
-use crate::ui::{Home, Login, Logout, ProteinDetails, ProteinList};
+use crate::ui::{About, Home, Login, Logout, ProteinDetails, ProteinList};
 use dioxus::prelude::*;
 
 use drsx::{Avatar, Icon, IconProps, Icons, MenuItem, NavLayout, SubMenuItem};
@@ -11,6 +11,8 @@ pub enum Route {
     #[layout(NavBar)]
         #[route("/")]
         Home {},
+        #[route("/about")]
+        About {},
         #[route("/protein/")]
         ProteinList {},
         #[route("/protein/:id")]
@@ -36,11 +38,19 @@ fn get_menu_items() -> Vec<Element> {
             name: "Home",
             to: Route::Home {},
             icon: Icon(IconProps { icon: Icons::Home }),
+            hidden: false,
         }},
         rsx! {MenuItem {
             name: "Proteins",
             to: Route::ProteinList {},
             icon: Icon(IconProps { icon: Icons::Home }),
+            hidden: false,
+        }},
+        rsx! {MenuItem {
+            name: "About",
+            to: Route::About{},
+            icon: Icon(IconProps { icon: Icons::About }),
+            hidden: false,
         }},
     ];
     items
