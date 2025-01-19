@@ -31,7 +31,7 @@ watch_path = ["src", "assets", "../drsx/src"]
 
 # CSS style file
 
-style = ["/tailwind.css"]
+style = ["/assets/tailwind.css"]
 
 # Javascript code file
 script = [

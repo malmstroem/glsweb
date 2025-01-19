@@ -1,4 +1,4 @@
-use crate::ui::{About, Home, Login, Logout, ProteinDetails, ProteinList};
+use crate::views::{About, Home, Login, Logout, ProteinDetails, ProteinList};
 use dioxus::prelude::*;
 
 use drsx::{Avatar, Icon, IconProps, Icons, MenuItem, NavLayout, SubMenuItem};
@@ -59,13 +59,13 @@ fn get_menu_items() -> Vec<Element> {
 fn get_avatar() -> Element {
     let usr = USR.read();
     let name = "User";
-    let imgurl = "/user_avatar.svg";
+    let imgurl = "/assets/user_avatar.svg";
     rsx! {
         Avatar {
             name: usr.clone(),
             imgurl,
             login: Route::Login {},
-            logout: Route::Logout {}
+            logout: Route::Logout {},
         }
     }
 }
@@ -81,13 +81,13 @@ fn NavBar() -> Element {
 
     rsx! {
         NavLayout {
-            submenu_title: "Admin",
-            logo_url: "/logo.png",
-            logo_alt: "LarsCo",
+            submenu_title: "",
+            logo_url: "/assets/logo.png",
+            logo_alt: "GLS",
             menuitems,
             submenuitems,
             avatar,
-            content
+            content,
         }
     }
 }

@@ -1,8 +1,7 @@
 use dioxus::dioxus_core::Element;
 
-#[cfg(feature = "server")]
 pub fn server_start(app_fn: fn() -> Element) {
-    use crate::{auth::*, server::ServerState};
+    use crate::{auth::*, ServerState};
     use axum::{routing::*, Extension};
     use axum_session::{SessionAnyPool, SessionConfig, SessionStore};
     use axum_session_auth::{AuthConfig, AuthSessionLayer};
@@ -12,7 +11,7 @@ pub fn server_start(app_fn: fn() -> Element) {
     use sqlx::PgPool;
     use std::sync::Arc;
 
-    init_logging();
+    dioxus::logger::initialize_default();
 
     tokio::runtime::Runtime::new()
         .unwrap()
@@ -37,10 +36,7 @@ pub fn server_start(app_fn: fn() -> Element) {
             let state = ServerState(Arc::new(pg_pool.clone()));
 
             let web_api_router = Router::new()
-                .serve_dioxus_application(ServeConfig::builder().build(), move || {
-                    VirtualDom::new(app_fn)
-                })
-                .await
+                .serve_dioxus_application(ServeConfig::builder().build().unwrap(), app_fn)
                 .layer(
                     AuthSessionLayer::<User, i64, SessionPgPool, PgPool>::new(Some(
                         pg_pool.clone(),
@@ -50,28 +46,11 @@ pub fn server_start(app_fn: fn() -> Element) {
                 .layer(axum_session::SessionLayer::new(session_store))
                 .layer(Extension(state));
 
-            let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 3000));
+            let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 8080));
             let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
 
             axum::serve(listener, web_api_router.into_make_service())
                 .await
                 .unwrap();
         });
-}
-
-#[cfg(feature = "server")]
-fn init_logging() {
-    use log::LevelFilter;
-
-    simple_logger::SimpleLogger::new()
-        .with_module_level("sqlx", LevelFilter::Info)
-        .with_module_level("tungstenite", LevelFilter::Info)
-        .with_module_level("tokio_tungstenite", LevelFilter::Info)
-        .with_module_level("axum_session", LevelFilter::Info)
-        .with_module_level("axum_session_auth", LevelFilter::Error)
-        .with_module_level("dioxus_core", LevelFilter::Info)
-        .with_module_level("dioxus_signals", LevelFilter::Info)
-        .with_module_level("tracing", LevelFilter::Warn)
-        .init()
-        .unwrap();
 }

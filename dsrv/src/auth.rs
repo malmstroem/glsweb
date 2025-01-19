@@ -18,7 +18,7 @@ use std::{
     collections::HashSet, error::Error, future::Future, net::SocketAddr, str::FromStr, sync::Arc,
 };
 
-use crate::server::ServerState;
+use crate::ServerState;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {

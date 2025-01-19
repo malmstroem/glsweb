@@ -6,36 +6,52 @@ edition = "2021"
 
 [dependencies]
 
-dioxus = { version = "0.5", features = ["fullstack", "router"] }
+#dioxus = { version = "0.6", features = ["fullstack", "router"] }
+dioxus = { version = "0.6.1", features = ["fullstack", "router"] }
 
-dioxus-logger = "0.5.1"
-axum = { version="0.7.7", optional = true }
-axum_session = { version = "0.14.2", optional = true }
+#dioxus-logger = "0.6.1"
+dioxus-logger = "0.6.1"
+dioxus-web = { version = "0.6.1", features = ["hydrate"], optional = true }
+axum = { version="0.7.9", optional = true }
+axum_session = { version = "0.14.4", optional = true }
 axum_session_auth = {version = "0.14.1", optional = true }
 axum_session_sqlx = {version="0.3.0", features= [ "postgres", "tls-rustls" ], optional = true }
 
-tokio = { version = "1.40.0", features = ["full"], optional = true }
-tower = { version = "0.5.1", optional = true }
-tower-http = { version = "0.6.1", features = ["auth"], optional = true }
-http = { version = "1.1.0", optional = true }
+tokio = { version = "1.43.0", features = ["full"], optional = true }
+tower = { version = "0.5.2", optional = true }
+tower-http = { version = "0.6.2", features = ["auth"], optional = true }
+http = { version = "1.2.0", optional = true }
 
-log = { version = "0.4.22", optional = true }
+log = { version = "0.4.25", optional = true }
 simple_logger = { version = "5.0.0", optional = true }
 
-async-trait = { version = "0.1.83", optional = true }
-sqlx = { version = "0.8.2", features = ["macros", "migrate", "postgres", "_unstable-all-types", "tls-rustls", "runtime-tokio"], optional = true }
-drsx = { path= "../drsx"}
+async-trait = { version = "0.1.85", optional = true }
+sqlx = { version = "0.8.3", features = ["macros", "migrate", "postgres", "_unstable-all-types", "tls-rustls", "runtime-tokio"], optional = true }
+drsx = { path= "drsx"}
+dsrv = { path= "dsrv", optional = true}
 
 
-serde = { version = "1.0.197", features = ["derive"] }
+serde = { version = "1.0.217", features = ["derive"] }
 execute = "0.2.13"
-anyhow = "1.0.89"
+anyhow = "1.0.95"
 base64 = "0.22.1"
-reqwest = { version = "0.12.8", features = ["json"] }
-#charming = { version = "0.4.0", features = ["ssr", "wasm"] }
+reqwest = { version = "0.12.12", features = ["json"] }
 charming = { version = "0.4.0", features=["wasm"], optional=true }
 
 [features]
+# default = ["server"]
 default = []
-server = ["dioxus/axum", "axum", "axum_session", "axum_session_auth", "axum_session_sqlx","tokio", "http", "tower", "tower-http","async-trait", "sqlx","log", "simple_logger", "charming"]
-web = ["dioxus/web", "charming"]
+server = ["dioxus/server", "axum", "axum_session", "axum_session_auth", "axum_session_sqlx","tokio", "http", "tower", "tower-http","async-trait", "sqlx","log", "simple_logger", "charming", "dsrv"]
+web = ["dioxus-web", "charming"]
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

@@ -1,8 +1,10 @@
-use crate::server::functions::login;
-use crate::ui::routes::USR;
-use crate::ui::Route;
+use crate::routes::USR;
+use crate::Route;
 use dioxus::prelude::*;
 use dioxus_logger::tracing::info;
+//use dsrv::server::functions::login;
+#[cfg(feature = "server")]
+use dsrv::auth::{Session, User};
 
 #[component]
 pub fn Login() -> Element {
@@ -58,7 +60,7 @@ pub fn Login() -> Element {
                                 name: "username",
                                 autocomplete: "username",
                                 required: "required",
-                                class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                             }
                         }
 
@@ -77,7 +79,7 @@ pub fn Login() -> Element {
                                     r#type: "password",
                                     autocomplete: "current-password",
                                     required: "required",
-                                    class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    class: "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6",
                                 }
                             }
 
@@ -94,4 +96,36 @@ pub fn Login() -> Element {
             }
         }
     }
+}
+
+#[cfg(feature = "server")]
+#[derive(sqlx::FromRow, Debug)]
+pub struct DbUser {
+    id: i32,
+    username: String,
+    password: String,
+}
+
+#[server(ServerLogin)]
+pub async fn login(username: String, password: String) -> Result<String, ServerFnError> {
+    let session: Session = extract().await?;
+    let auth: Session = extract().await?;
+    let dbc = session.1;
+    let user: DbUser = match sqlx::query_as::<_, DbUser>(
+        "SELECT id,username,password FROM users where username = $1",
+    )
+    .bind(username)
+    .fetch_one(dbc.as_ref())
+    .await
+    {
+        Ok(user) => user,
+        Err(err) => return Ok("user not found".into()), // FIXME: replace with error
+    };
+    info!("{user:?}");
+    if user.password != password {
+        return Ok("incorrect password".into()); // FIXME: replace with error
+    }
+    info!("Match");
+    auth.login_user(user.id as i64);
+    Ok("login successful".into())
 }

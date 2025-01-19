@@ -1,0 +1,33 @@
+[package]
+name = "dsrv"
+version = "0.1.0"
+authors = ["Lars Malmstroem <github@malmstroem.net>"]
+edition = "2021"
+
+[dependencies]
+
+dioxus = { version = "0.6.1", features = ["fullstack", "router"] }
+
+dioxus-logger = "0.6.1"
+axum = { version="0.7.9" }
+axum_session = { version = "0.14.4" }
+axum_session_auth = {version = "0.14.1" }
+axum_session_sqlx = {version="0.3.0", features= [ "postgres", "tls-rustls" ] }
+
+tokio = { version = "1.43.0", features = ["full"] }
+tower = { version = "0.5.2" }
+tower-http = { version = "0.6.2", features = ["auth"] }
+http = { version = "1.2.0" }
+
+log = { version = "0.4.25" }
+simple_logger = { version = "5.0.0" }
+
+async-trait = { version = "0.1.85" }
+sqlx = { version = "0.8.3", features = ["macros", "migrate", "postgres", "_unstable-all-types", "tls-rustls", "runtime-tokio"] }
+
+
+serde = { version = "1.0.217", features = ["derive"] }
+execute = "0.2.13"
+anyhow = "1.0.95"
+base64 = "0.22.1"
+reqwest = { version = "0.12.12", features = ["json"] }
