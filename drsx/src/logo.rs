@@ -10,9 +10,9 @@ pub struct CompanyLogoProps {
 pub fn CompanyLogo(props: CompanyLogoProps) -> Element {
     rsx! {
 
-        div { class: "flex h-16 shrink-0 items-center bg-white",
+        div { class: "flex h-32 shrink-0 items-center bg-white",
             img {
-                class: "h-8 w-auto bg-white",
+                class: "h-24 w-auto bg-white",
                 src: props.logo_url,
                 alt: props.alt,
             }

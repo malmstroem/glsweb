@@ -1,17 +1,14 @@
 # glsweb
 
-The GLS data portal is written in rust using the dioxus framework.
-The code is a proof-of-principle project to test the feasibility of dioxus.
+The GLS data portal is a data portal <https://doi.org/10.1016/j.cell.2025.03.013>.
+The GLS data portal is written in rust using the [dioxus](https://dioxuslabs.com/) web framework.
+It has only been tested with version 0.6.3.
 
 ## deploy instructions
 
-note: the database schema is still missing.
+The database dump can be downloaded from [zenodo](https://doi.org/10.5281/zenodo.14292542)
 
 ```bash
 export SERVICE_DB_URL="postgres://<user>:<pwd>@<host>/<db>"
-cd ~/glsweb
-dx clean
-dx build --release
-pgrep glsweb | xargs kill -term
-./dist/glsweb < /dev/null > run.log 2> run.err &
+dx run --release
 ```

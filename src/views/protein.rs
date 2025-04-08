@@ -49,7 +49,7 @@ pub fn ProteinList() -> Element {
             }
         }
     };
-    let c1 = rsx! {
+    let _c1 = rsx! {
         button {
             class: "inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
             onclick: move |_| async move {
@@ -69,7 +69,6 @@ pub fn ProteinList() -> Element {
                 {ren}
             }
         }
-        {c1}
     }
 }
 
@@ -505,9 +504,7 @@ pub async fn get_proteins(offset: i32, search: String) -> Result<Vec<Protein>, S
     let auth: Session = extract().await?;
     let curr_user = auth.current_user.clone().unwrap_or_default();
     info!("Current user: {curr_user:?}");
-    if !curr_user.permissions.contains("Category::View") {
-        return Ok(vec![]);
-    }
+    //if !curr_user.permissions.contains("Category::View") { return Ok(vec![]); }
 
     let stmt = match search.as_ref() {
         "" => String::from("SELECT ac.id,entry,entry_name,ensg,symbol,name,biotype,gls::text,global_label_string as label,0.0::float as rank FROM ac INNER JOIN target ON frm = ensg INNER JOIN gls ON ac.id = gls.ac::int WHERE entry IN ('O14594', 'P84074', 'Q16650', 'Q9BQI7', 'P23515', 'P01160', 'P19429', 'Q01449', 'P45379', 'P20813', 'P54840', 'Q14032', 'P33261', 'P08684', 'P07988', 'P11686', 'Q8IWL2', 'Q8IWL1', 'Q9UBF9', 'A8MU46', 'Q13698', 'P02585', 'P01308', 'Q0VAF6', 'P48304', 'Q6GPI1', 'P04746', 'P16233', 'O60829', 'P07288', 'P15309', 'P04279', 'P04155', 'Q03403', 'Q3MIW9', 'Q86XP6', 'P07098', 'P0DJD9', 'P27352', 'Q9NS71', 'Q6PHW0', 'P01266', 'P07202', 'P16473', 'O00476', 'O15244', 'Q9NP85', 'Q8WZ55', 'Q96S37') ORDER BY id DESC LIMIT 25 OFFSET $1;"),
@@ -583,9 +580,7 @@ pub async fn get_protein(id: i32) -> Result<ProteinDetail, ServerFnError> {
     let session: Session = extract().await?;
     let auth: Session = extract().await?;
     let curr_user = auth.current_user.clone().unwrap_or_default();
-    if !curr_user.permissions.contains("Category::View") {
-        return Ok(ProteinDetail::default());
-    }
+    //if !curr_user.permissions.contains("Category::View") { return Ok(ProteinDetail::default()); }
 
     let dbc = session.1;
     let item: ProteinDetailQuery = sqlx::query_as::<_, ProteinDetailQuery>(
@@ -626,9 +621,7 @@ pub async fn get_protein_q(id: i32, atlas: String) -> Result<Vec<QM>, ServerFnEr
     let session: Session = extract().await?;
     let auth: Session = extract().await?;
     let curr_user = auth.current_user.clone().unwrap_or_default();
-    if !curr_user.permissions.contains("Category::View") {
-        return Ok(vec![]);
-    }
+    //if !curr_user.permissions.contains("Category::View") { return Ok(vec![]); }
 
     let dbc = session.1;
     let items: Vec<QmQuery> = sqlx::query_as::<_, QmQuery>(
